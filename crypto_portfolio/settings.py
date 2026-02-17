@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # إيقاف تشغيل DEBUG في بيئة الإنتاج
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['vipwebsite.onrender.com', 'your-domain.com']  # إضافة النطاقات المسموح بها
 
 
 # Application definition
@@ -132,3 +132,28 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Logging - To capture errors in production instead of showing them to users
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'django_errors.log',  # ملف لتخزين الأخطاء
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
+
+# Email settings for error notifications in production (optional)
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'  # إيقاف إرسال البريد الإلكتروني للتنبيهات أثناء التطوير
